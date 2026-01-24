@@ -1,11 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SITE_DATA } from "@/constants/data";
 import { SectionWrapper } from "./SectionWrapper";
-import Link from "next/link";
 
 export const AboutSection = () => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
     return (
         <SectionWrapper id="about">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -26,13 +28,32 @@ export const AboutSection = () => {
                     <p className="text-accent-gray leading-relaxed">
                         With extensive training across India and Australia, including Obstetrics and Gynaecology training and advanced Maternal-Fetal-Medicine training at Westmead and Nepean hospitals, I am experienced in managing both low-risk and complex pregnancies.
                     </p>
+
+                    <AnimatePresence>
+                        {isExpanded && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="space-y-4 overflow-hidden"
+                            >
+                                <p className="text-accent-gray leading-relaxed">
+                                    I believe in empowering women through education and shared decision-making. Whether you are navigating a high-risk pregnancy or seeking management for complex gynaecological conditions, my goal is to ensure you feel heard, safe, and expertly cared for.
+                                </p>
+                                <p className="text-accent-gray leading-relaxed">
+                                    Fluent in English, Hindi, Telugu, Gujarati, and Marathi, I strive to bridge cultural and linguistic gaps to provide truly personalized care for our diverse community.
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     <div className="pt-4">
-                        <Link
-                            href={SITE_DATA.general.bookingLink}
-                            className="inline-block border-b-2 border-primary text-primary font-semibold hover:text-accent hover:border-accent transition-colors pb-1"
+                        <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="inline-block border-b-2 border-primary text-primary font-semibold hover:text-accent hover:border-accent transition-colors pb-1 outline-none"
                         >
-                            Read Full Bio
-                        </Link>
+                            {isExpanded ? "Read Less" : "Read Full Bio"}
+                        </button>
                     </div>
                 </motion.div>
                 <motion.div

@@ -91,7 +91,7 @@ export const HeroSection = () => {
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                             <Link
-                                href="/services"
+                                href="#services"
                                 className="px-8 py-4 border border-accent text-accent rounded-xl font-semibold hover:bg-accent hover:text-white transition-all duration-300 block text-center"
                             >
                                 {SITE_DATA.hero.secondaryButton}
@@ -108,7 +108,7 @@ export const HeroSection = () => {
                     className="relative h-[400px] md:h-[700px] w-full block"
                 >
                     <Image
-                        src="/assets/doctor-cutout.jpg"
+                        src="/assets/doctor-cutout.png"
                         alt="Dr. Priyanka Karine"
                         fill
                         className="object-contain object-center"
