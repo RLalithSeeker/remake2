@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-playfair: 'Playfair Display', serif;
+  --font-lato: 'Lato', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: theme('colors.accent-gray');
+  background: theme('colors.secondary');
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
