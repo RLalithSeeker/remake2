@@ -18,7 +18,7 @@ export const HeroSection = () => {
     const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
     return (
-        <section ref={ref} className="relative min-h-screen flex items-center overflow-hidden pb-20 md:pb-32">
+        <section ref={ref} className="relative min-h-[100dvh] flex items-center overflow-hidden pb-12 pt-24 md:py-32">
             {/* Background with Parallax */}
             <motion.div
                 style={{ y: backgroundY }}
@@ -105,7 +105,7 @@ export const HeroSection = () => {
                     initial={{ opacity: 0, scale: 1.1 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-                    className="relative h-[400px] md:h-[700px] w-full block"
+                    className="relative h-[50vh] md:h-[700px] w-full block mt-8 md:mt-0"
                 >
                     <Image
                         src="/assets/doctor-cutout.png"

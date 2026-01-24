@@ -67,59 +67,58 @@ export const Navbar = () => {
                                 className="text-accent p-2 rounded-lg hover:bg-black/5"
                                 aria-label="Toggle menu"
                             >
-                                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                                {<Menu size={24} />}
                             </motion.button>
                         </div>
                     </div>
                 </div>
 
-                {/* Mobile Menu */}
+                {/* Mobile Menu Overlay */}
                 <AnimatePresence>
                     {isOpen && (
                         <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{
-                                height: "auto",
-                                opacity: 1,
-                                transition: { duration: 0.3, staggerChildren: 0.1 }
-                            }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="md:hidden overflow-hidden bg-white/95 backdrop-blur-md border-b border-gray-100"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[60] bg-secondary flex flex-col items-center justify-center p-8"
                         >
-                            <div className="px-4 py-6 space-y-4 flex flex-col items-center">
-                                {SITE_DATA.navigation.map((item) => (
+                            {/* Close Button */}
+                            <button
+                                onClick={() => setIsOpen(false)}
+                                className="absolute top-6 right-6 p-2 text-accent hover:bg-black/5 rounded-full"
+                            >
+                                <X size={32} />
+                            </button>
+
+                            {/* Menu Items */}
+                            <div className="flex flex-col items-center space-y-8">
+                                {SITE_DATA.navigation.map((item, i) => (
                                     <motion.div
                                         key={item.label}
-                                        variants={{
-                                            hidden: { opacity: 0, x: -20 },
-                                            visible: { opacity: 1, x: 0 }
-                                        }}
-                                        initial="hidden"
-                                        animate="visible"
-                                        className="w-full text-center"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.1 }}
                                     >
                                         <Link
                                             href={item.href}
                                             onClick={() => setIsOpen(false)}
-                                            className="text-accent text-lg font-medium block w-full py-2 active:bg-gray-50 rounded-lg"
+                                            className="font-serif text-3xl md:text-4xl text-accent font-medium hover:text-primary transition-colors"
                                         >
                                             {item.label}
                                         </Link>
                                     </motion.div>
                                 ))}
+
                                 <motion.div
-                                    variants={{
-                                        hidden: { opacity: 0, y: 20 },
-                                        visible: { opacity: 1, y: 0 }
-                                    }}
-                                    initial="hidden"
-                                    animate="visible"
-                                    className="w-full"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: SITE_DATA.navigation.length * 0.1 }}
+                                    className="pt-8"
                                 >
                                     <Link
                                         href={SITE_DATA.general.bookingLink}
                                         onClick={() => setIsOpen(false)}
-                                        className="bg-primary text-white w-full text-center py-3 rounded-xl font-semibold mt-4 block shadow-md active:scale-95 transition-transform"
+                                        className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-xl transition-all active:scale-95"
                                     >
                                         Book Consultation
                                     </Link>
