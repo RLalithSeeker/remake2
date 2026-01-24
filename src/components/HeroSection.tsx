@@ -18,7 +18,7 @@ export const HeroSection = () => {
     const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
     return (
-        <section ref={ref} className="relative min-h-[100dvh] flex items-center overflow-hidden pb-12 pt-24 md:py-32">
+        <section ref={ref} className="relative min-h-[100dvh] flex items-center overflow-x-hidden pb-12 pt-24 md:py-32">
             {/* Background with Parallax */}
             <motion.div
                 style={{ y: backgroundY }}

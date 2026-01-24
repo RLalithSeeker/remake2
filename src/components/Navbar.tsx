@@ -19,6 +19,18 @@ export const Navbar = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Lock body scroll when menu is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [isOpen]);
+
     return (
         <>
             <nav
@@ -30,7 +42,7 @@ export const Navbar = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex items-center justify-between h-20">
                         {/* Logo */}
-                        <Link href="/" className="font-serif text-2xl text-accent font-bold tracking-tight">
+                        <Link href="/" className="font-serif text-2xl text-accent font-bold tracking-tight relative z-[101]">
                             {SITE_DATA.general.siteName}
                         </Link>
 
@@ -59,16 +71,18 @@ export const Navbar = () => {
                             </motion.div>
                         </div>
 
-                        {/* Mobile Menu Button */}
-                        <div className="md:hidden">
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => setIsOpen(!isOpen)}
-                                className="text-accent p-2 rounded-lg hover:bg-black/5"
-                                aria-label="Toggle menu"
-                            >
-                                {<Menu size={24} />}
-                            </motion.button>
+                        {/* Mobile Menu Button - Hide when open */}
+                        <div className="md:hidden relative z-[101]">
+                            {!isOpen && (
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => setIsOpen(true)}
+                                    className="text-accent p-2 rounded-lg hover:bg-black/5"
+                                    aria-label="Open menu"
+                                >
+                                    <Menu size={24} />
+                                </motion.button>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -80,12 +94,13 @@ export const Navbar = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-[60] bg-secondary flex flex-col items-center justify-center p-8"
+                            className="fixed inset-0 z-[100] bg-secondary flex flex-col items-center justify-center p-8 overscroll-contain"
                         >
                             {/* Close Button */}
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="absolute top-6 right-6 p-2 text-accent hover:bg-black/5 rounded-full"
+                                aria-label="Close menu"
                             >
                                 <X size={32} />
                             </button>
