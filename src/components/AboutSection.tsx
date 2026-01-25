@@ -5,8 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SITE_DATA } from "@/constants/data";
 import { SectionWrapper } from "./SectionWrapper";
 
+const VALUES_LIST = [
+    "Listening with compassion to every patient&apos;s unique story.",
+    "Providing evidence-based, top-tier medical care.",
+    "Ensuring comfort, privacy, and dignity in every interaction.",
+    "Fluent in English, Hindi, Telugu, Gujarati, and Marathi.",
+];
+
 export const AboutSection = () => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isValuesExpanded, setIsValuesExpanded] = useState(false);
 
     return (
         <SectionWrapper id="about">
@@ -65,23 +73,44 @@ export const AboutSection = () => {
                 >
                     <h3 className="font-serif text-2xl text-accent font-bold mb-4">Values & Philosophy</h3>
                     <ul className="space-y-4">
-                        <li className="flex items-start gap-3">
-                            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-                            <span className="text-accent-gray">Listening with compassion to every patient's unique story.</span>
-                        </li>
-                        <li className="flex items-start gap-3">
-                            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-                            <span className="text-accent-gray">Providing evidence-based, top-tier medical care.</span>
-                        </li>
-                        <li className="flex items-start gap-3">
-                            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-                            <span className="text-accent-gray">Ensuring comfort, privacy, and dignity in every interaction.</span>
-                        </li>
-                        <li className="flex items-start gap-3">
-                            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
-                            <span className="text-accent-gray">Fluent in English, Hindi, Telugu, Gujarati, and Marathi.</span>
-                        </li>
+                        {/* Always show first 3 items */}
+                        {VALUES_LIST.slice(0, 3).map((value: string, idx: number) => (
+                            <li key={idx} className="flex items-start gap-3">
+                                <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
+                                <span className="text-accent-gray">{value}</span>
+                            </li>
+                        ))}
+
+                        {/* Conditionally show the rest */}
+                        <AnimatePresence>
+                            {isValuesExpanded && (
+                                <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="overflow-hidden space-y-4"
+                                >
+                                    {VALUES_LIST.slice(3).map((value: string, idx: number) => (
+                                        <li key={idx + 3} className="flex items-start gap-3">
+                                            <span className="w-1.5 h-1.5 bg-primary rounded-full mt-2" />
+                                            <span className="text-accent-gray">{value}</span>
+                                        </li>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
                     </ul>
+
+                    {VALUES_LIST.length > 3 && (
+                        <div className="pt-4">
+                            <button
+                                onClick={() => setIsValuesExpanded(!isValuesExpanded)}
+                                className="text-sm font-semibold text-primary hover:text-accent transition-colors flex items-center gap-1"
+                            >
+                                {isValuesExpanded ? "Show Less" : "Know More"}
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
             </div>
         </SectionWrapper>

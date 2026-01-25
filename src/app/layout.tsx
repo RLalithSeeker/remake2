@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lato } from "next/font/google";
+import { Playfair_Display, Figtree } from "next/font/google"; // Changed Lato to Figtree
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -10,10 +10,9 @@ const playfair = Playfair_Display({
     display: "swap",
 });
 
-const lato = Lato({
-    weight: ["300", "400", "700"],
+const figtree = Figtree({ // Changed Lato to Figtree
     subsets: ["latin"],
-    variable: "--font-lato",
+    variable: "--font-figtree",
     display: "swap",
 });
 
@@ -29,7 +28,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={`${playfair.variable} ${lato.variable} font-sans antialiased bg-secondary flex flex-col min-h-screen`}>
+            <body className={`${playfair.variable} ${figtree.variable} font-sans antialiased bg-secondary flex flex-col min-h-screen selection:bg-primary/30 selection:text-accent`}>
                 <Navbar />
                 <main className="flex-grow">
                     {children}

@@ -3,120 +3,126 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { SITE_DATA } from "@/constants/data";
-import { SectionWrapper } from "./SectionWrapper";
 import { useRef } from "react";
+import { SITE_DATA } from "@/constants/data";
 
 export const HeroSection = () => {
-    const ref = useRef(null);
+    const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
-        target: ref,
+        target: containerRef,
         offset: ["start start", "end start"],
     });
 
-    const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-    const textY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    // Parallax Effects
+    const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+    const yText = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+    const opacityHero = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
     return (
-        <section ref={ref} className="relative min-h-[100dvh] flex items-center overflow-x-hidden pb-12 pt-24 md:py-32">
-            {/* Background with Parallax */}
+        <section
+            ref={containerRef}
+            className="relative min-h-[100dvh] flex items-start pt-24 pb-20 md:pt-32 md:pb-32 overflow-hidden bg-secondary transition-all"
+        >
+            {/* 1. Background Image (Absolute) */}
             <motion.div
-                style={{ y: backgroundY }}
-                className="absolute inset-0 z-0"
+                style={{ y: yBg }}
+                className="absolute inset-0 z-0 select-none"
             >
                 <Image
                     src="/assets/bg.jpg"
-                    alt="Clinic Ambience"
+                    alt="Luxury Clinic Atmosphere"
                     fill
                     priority
                     className="object-cover opacity-60"
+                    quality={90}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 to-transparent mix-blend-overlay" />
+                {/* Grading Overlays for Readability */}
+                <div className="absolute inset-0 bg-gradient-to-r from-secondary via-secondary/80 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-secondary to-transparent" />
             </motion.div>
 
-            <SectionWrapper className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center min-h-[inherit]">
-                {/* Left Content */}
-                <motion.div
-                    style={{ y: textY }}
-                    initial="hidden"
-                    animate="visible"
-                    variants={{
-                        hidden: { opacity: 0 },
-                        visible: {
-                            opacity: 1,
-                            transition: {
-                                staggerChildren: 0.3,
-                                delayChildren: 0.2,
-                            },
-                        },
-                    }}
-                    className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start"
-                >
+            {/* 2. Content Container - Manually constrained to avoid SectionWrapper's fixed padding */}
+            <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 h-full">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start h-full">
+
+                    {/* Left: Text Content */}
                     <motion.div
-                        variants={{
-                            hidden: { opacity: 0, y: 40 },
-                            visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } },
-                        }}
+                        style={{ y: yText, opacity: opacityHero }}
+                        className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 pt-12 md:pt-20"
                     >
-                        <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-accent font-bold leading-tight text-balance">
+                        {/* Eyebrow Label */}
+                        <motion.span
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
+                            className="inline-block px-4 py-1.5 rounded-full border border-accent/20 bg-white/50 backdrop-blur-sm text-accent text-xs font-bold uppercase tracking-widest"
+                        >
+                            Premier Women&apos;s Health
+                        </motion.span>
+
+                        {/* Headline */}
+                        <motion.h1
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+                            className="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-accent font-bold leading-[1.1] tracking-tight"
+                        >
                             {SITE_DATA.hero.headline}
-                        </h1>
-                    </motion.div>
+                        </motion.h1>
 
-                    <motion.div
-                        variants={{
-                            hidden: { opacity: 0, y: 30 },
-                            visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } },
-                        }}
-                    >
-                        <p className="text-lg md:text-xl text-accent-gray max-w-lg leading-relaxed">
+                        {/* Subheadline */}
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6, duration: 0.8 }}
+                            className="text-base md:text-xl text-accent-gray/90 max-w-lg font-light leading-relaxed"
+                        >
                             {SITE_DATA.hero.subheadline}
-                        </p>
-                    </motion.div>
+                        </motion.p>
 
-                    <motion.div
-                        variants={{
-                            hidden: { opacity: 0, y: 20 },
-                            visible: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } },
-                        }}
-                        className="flex flex-col sm:flex-row gap-4 w-full justify-center md:justify-start"
-                    >
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        {/* CTA Buttons */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.8, duration: 0.8 }}
+                            className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-2"
+                        >
                             <Link
                                 href={SITE_DATA.general.bookingLink}
-                                className="px-8 py-4 bg-primary text-white rounded-xl font-semibold shadow-xl shadow-primary/20 hover:shadow-primary/40 block text-center"
+                                className="group relative overflow-hidden bg-primary text-white text-lg font-semibold px-10 py-4 rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
                             >
-                                {SITE_DATA.hero.primaryButton}
+                                <span className="relative z-10">Book Appointment</span>
+                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                             </Link>
-                        </motion.div>
-                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+
                             <Link
                                 href="#services"
-                                className="px-8 py-4 border border-accent text-accent rounded-xl font-semibold hover:bg-accent hover:text-white transition-all duration-300 block text-center"
+                                className="group px-10 py-4 rounded-full border border-accent/30 text-accent font-semibold hover:bg-accent hover:text-white hover:border-accent transition-all duration-300 backdrop-blur-sm"
                             >
-                                {SITE_DATA.hero.secondaryButton}
+                                Explore Services
                             </Link>
                         </motion.div>
                     </motion.div>
-                </motion.div>
 
-                {/* Right Content - Doctor Image */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-                    className="relative h-[50vh] md:h-[700px] w-full block mt-8 md:mt-0"
-                >
-                    <Image
-                        src="/assets/doctor-cutout.png"
-                        alt="Dr. Priyanka Karine"
-                        fill
-                        className="object-contain object-center"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority
-                    />
-                </motion.div>
-            </SectionWrapper>
+                    {/* Right: Hero Image (Doctor) */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        transition={{ delay: 0.4, duration: 1.2, ease: "easeOut" }}
+                        className="relative w-full h-[40vh] lg:h-[650px] select-none pointer-events-none lg:-mt-10"
+                    >
+                        <Image
+                            src="/assets/doctor-cutout.png"
+                            alt="Dr. Priyanka Karine"
+                            fill
+                            className="object-contain object-center lg:object-right"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            priority
+                            quality={100}
+                        />
+                    </motion.div>
+                </div>
+            </div>
         </section>
     );
 };
