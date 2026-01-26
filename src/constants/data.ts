@@ -22,6 +22,7 @@ export const SITE_DATA = {
         { label: "Home", href: "/" },
         { label: "About", href: "#about" },
         { label: "Services", href: "#services" },
+        { label: "Insights", href: "#insights" },
         { label: "Locations", href: "#locations" },
         { label: "Contact", href: "#contact" },
     ],

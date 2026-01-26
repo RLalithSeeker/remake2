@@ -3,6 +3,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { AffiliationsSection } from "@/components/AffiliationsSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { LocationsSection } from "@/components/LocationsSection";
+import { InsightsSection } from "@/components/InsightsSection";
 import { FAQSection } from "@/components/FAQSection";
 
 export default function Home() {
@@ -13,6 +14,7 @@ export default function Home() {
             <AboutSection />
             <ServicesSection />
             <LocationsSection />
+            <InsightsSection />
             <FAQSection />
         </div>
     );

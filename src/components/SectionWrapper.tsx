@@ -6,14 +6,15 @@ import { motion } from "framer-motion";
 
 interface SectionWrapperProps {
     children: ReactNode;
-    className?: string;
+    className?: string; // Applied to inner container
+    sectionClassName?: string; // Applied to outer section
     id?: string;
     delay?: number;
 }
 
-export const SectionWrapper = ({ children, className, id, delay = 0 }: SectionWrapperProps) => {
+export const SectionWrapper = ({ children, className, sectionClassName, id, delay = 0 }: SectionWrapperProps) => {
     return (
-        <section id={id} className="w-full py-12 md:py-24 px-4 md:px-8">
+        <section id={id} className={cn("w-full py-12 md:py-24 px-4 md:px-8", sectionClassName)}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
