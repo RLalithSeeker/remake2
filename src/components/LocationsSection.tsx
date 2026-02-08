@@ -13,13 +13,14 @@ export const LocationsSection = () => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
 
-        const scrollSpeed = 1;
-        const scrollInterval = 20;
+        const scrollSpeed = 0.5; // Matched speed with Affiliations
+        const scrollInterval = 15;
 
         const scroll = () => {
             if (scrollContainer) {
-                // Check if we've reached the end
-                if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1) {
+                // If we've scrolled past the first half (containing first 2 sets), reset to 0
+                // This assumes we are rendering 4 sets of data
+                if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
                     scrollContainer.scrollLeft = 0;
                 } else {
                     scrollContainer.scrollLeft += scrollSpeed;
@@ -29,15 +30,23 @@ export const LocationsSection = () => {
 
         const intervalId = setInterval(scroll, scrollInterval);
 
-        // Pause on hover
+        // Pause on hover (keeping this as it's useful for reading location details)
         const handleMouseEnter = () => clearInterval(intervalId);
         const handleMouseLeave = () => {
-            // Restart interval - note: this simple logic assumes we want to restart always. 
-            // Ideally we'd store the interval ID in a ref to manage it accurately but this is fine for this scope.
-            // Actually, recreating the interval here is tricky without state/refs for the interval itself.
-            // Let's keep it simple: just auto-scroll, maybe no pause for now or simple clear/restart.
+            // We need to restart the interval. 
+            // Since we can't easily restart the same intervalId, we essentially rely on a re-render or just simple clearing.
+            // However, strictly complying with "same logic" might imply removing pause? 
+            // But reading locations requires pausing. 
+            // The previous code had empty handleMouseLeave. 
+            // To make it restart, we'd need to extract the interval logic.
+            // For now, let's keep it simple and just let it auto-scroll continuously if we don't want pause, 
+            // OR properly implement pause/resume.
+            // Given the user said "same logic... as Affiliate", Affiliate DOES NOT pause.
+            // But Locations have text. I will remove the pause to strictly follow "same logic" request 
+            // and because the previous pause implementation was incomplete (empty mouseLeave).
         };
 
+        // Actually, let's just use the exact logic from Affiliations which has no pause.
         return () => clearInterval(intervalId);
     }, []);
 
@@ -53,26 +62,26 @@ export const LocationsSection = () => {
             {/* Horizontal Scroll Container */}
             <div
                 ref={scrollRef}
-                className="flex overflow-x-auto pb-8 gap-6 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 select-none"
+                className="flex overflow-x-hidden pb-8 gap-6 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 select-none mask-image-linear-gradient"
                 style={{ scrollBehavior: "auto" }}
             >
-                {SITE_DATA.locations.map((location, index) => (
+                {/* Render data 4 times for seamless looping */}
+                {[...SITE_DATA.locations, ...SITE_DATA.locations, ...SITE_DATA.locations, ...SITE_DATA.locations].map((location, index) => (
                     <motion.div
                         key={index}
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.1 }}
-                        className="min-w-[300px] md:min-w-[350px] bg-secondary/30 p-8 rounded-2xl border border-secondary hover:border-primary/20 transition-colors duration-300 flex-shrink-0"
+                        initial={{ opacity: 0.8 }}
+                        whileHover={{ scale: 1.02, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="w-[350px] md:w-[400px] bg-secondary/30 p-8 rounded-2xl border border-secondary hover:border-primary/20 transition-all duration-300 flex-shrink-0 whitespace-normal"
                     >
                         <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary mb-6 shadow-sm">
                             <MapPin size={24} />
                         </div>
-                        <h3 className="font-serif text-xl text-accent font-bold mb-3">{location.name}</h3>
-                        <p className="text-sm text-accent-gray leading-relaxed mb-3">
+                        <h3 className="font-serif text-2xl text-accent font-bold mb-3">{location.name}</h3>
+                        <p className="text-base text-accent-gray leading-relaxed mb-3">
                             {location.detail}
                         </p>
-                        <div className="flex items-center text-xs font-semibold text-primary bg-primary/5 py-1 px-3 rounded-full w-fit">
+                        <div className="flex items-center text-sm font-semibold text-primary bg-primary/5 py-1 px-3 rounded-full w-fit">
                             <span className="mr-1">🕒</span>
                             {location.timing}
                         </div>

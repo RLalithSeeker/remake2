@@ -61,9 +61,19 @@ export const AffiliationsSection = () => {
                             initial={{ opacity: 0.4, filter: "grayscale(100%)" }}
                             whileHover={{ opacity: 1, filter: "grayscale(0%)", scale: 1.05 }}
                             transition={{ duration: 0.3 }}
-                            className={`text-xl md:text-3xl font-serif font-semibold cursor-default flex-shrink-0 transition-colors ${org.color || 'text-accent-gray'}`}
+                            className={`flex-shrink-0 transition-colors ${org.color || 'text-accent-gray'}`}
                         >
-                            {org.name}
+                            {org.logo ? (
+                                <img
+                                    src={org.logo}
+                                    alt={org.name}
+                                    className="h-12 md:h-16 w-auto object-contain"
+                                />
+                            ) : (
+                                <span className="text-xl md:text-3xl font-serif font-semibold cursor-default">
+                                    {org.name}
+                                </span>
+                            )}
                         </motion.div>
                     ))}
                 </div>
