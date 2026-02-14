@@ -6,7 +6,7 @@ import { SITE_DATA } from "@/constants/data";
 import { SectionWrapper } from "./SectionWrapper";
 
 const VALUES_LIST = [
-    "Listening with compassion to every patient&apos;s unique story.",
+    "Listening with compassion to every patient's unique story.",
     "Providing evidence-based, top-tier medical care.",
     "Ensuring comfort, privacy, and dignity in every interaction.",
     "Fluent in English, Hindi, Telugu, Gujarati, and Marathi.",
@@ -54,6 +54,24 @@ export const AboutSection = () => {
                             </motion.div>
                         )}
                     </AnimatePresence>
+
+                    {/* Languages Spoken — Always Visible */}
+                    <div className="pt-2">
+                        <div className="flex items-center gap-2 mb-3">
+                            <span className="text-lg">🌐</span>
+                            <span className="text-sm font-semibold text-accent uppercase tracking-wide">Languages Spoken</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {["English", "Hindi", "Telugu", "Gujarati", "Marathi"].map((lang) => (
+                                <span
+                                    key={lang}
+                                    className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full border border-primary/20"
+                                >
+                                    {lang}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
 
                     <div className="pt-4">
                         <button

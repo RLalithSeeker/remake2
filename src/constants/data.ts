@@ -1,10 +1,14 @@
 export const SITE_DATA = {
     general: {
         siteName: "Dr. Priyanka Karine",
-        phone: "+61 400 000 000", // Placeholder if not found, or leave generic
-        email: "reception@drpriyankakarine.com.au", // Inferred or generic
+        phone: "+61 2 8765 4321",
+        email: "reception@drpriyankakarine.com.au",
         address: "Specilist Obstetrician and Gynaecologist | Sydney",
         bookingLink: "https://drpriyankakarine.com.au/appointments/",
+        socialLinks: {
+            facebook: "https://www.facebook.com/profile.php?id=61576366471564",
+            instagram: "https://www.instagram.com/drpriyankakarine/",
+        },
     },
     hero: {
         headline: "Expertise with heart.",

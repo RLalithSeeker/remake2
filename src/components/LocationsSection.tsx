@@ -1,54 +1,55 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { SITE_DATA } from "@/constants/data";
 import { SectionWrapper } from "./SectionWrapper";
-import { MapPin } from "lucide-react";
+import { MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 
 export const LocationsSection = () => {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(true);
+    const [isPaused, setIsPaused] = useState(false);
 
+    const checkScrollState = useCallback(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        setCanScrollLeft(el.scrollLeft > 10);
+        setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+    }, []);
+
+    // Auto-scroll
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
 
-        const scrollSpeed = 0.5; // Matched speed with Affiliations
+        const scrollSpeed = 0.5;
         const scrollInterval = 15;
 
-        const scroll = () => {
-            if (scrollContainer) {
-                // If we've scrolled past the first half (containing first 2 sets), reset to 0
-                // This assumes we are rendering 4 sets of data
-                if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
-                    scrollContainer.scrollLeft = 0;
-                } else {
-                    scrollContainer.scrollLeft += scrollSpeed;
-                }
+        const interval = setInterval(() => {
+            if (isPaused) return;
+            if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+                scrollContainer.scrollLeft = 0;
+            } else {
+                scrollContainer.scrollLeft += scrollSpeed;
             }
-        };
+            checkScrollState();
+        }, scrollInterval);
 
-        const intervalId = setInterval(scroll, scrollInterval);
+        return () => clearInterval(interval);
+    }, [isPaused, checkScrollState]);
 
-        // Pause on hover (keeping this as it's useful for reading location details)
-        const handleMouseEnter = () => clearInterval(intervalId);
-        const handleMouseLeave = () => {
-            // We need to restart the interval. 
-            // Since we can't easily restart the same intervalId, we essentially rely on a re-render or just simple clearing.
-            // However, strictly complying with "same logic" might imply removing pause? 
-            // But reading locations requires pausing. 
-            // The previous code had empty handleMouseLeave. 
-            // To make it restart, we'd need to extract the interval logic.
-            // For now, let's keep it simple and just let it auto-scroll continuously if we don't want pause, 
-            // OR properly implement pause/resume.
-            // Given the user said "same logic... as Affiliate", Affiliate DOES NOT pause.
-            // But Locations have text. I will remove the pause to strictly follow "same logic" request 
-            // and because the previous pause implementation was incomplete (empty mouseLeave).
-        };
-
-        // Actually, let's just use the exact logic from Affiliations which has no pause.
-        return () => clearInterval(intervalId);
-    }, []);
+    const scroll = (direction: "left" | "right") => {
+        const el = scrollRef.current;
+        if (!el) return;
+        setIsPaused(true);
+        const amount = 380;
+        el.scrollBy({ left: direction === "left" ? -amount : amount, behavior: "smooth" });
+        setTimeout(checkScrollState, 400);
+        // Resume auto-scroll after a delay
+        setTimeout(() => setIsPaused(false), 3000);
+    };
 
     return (
         <SectionWrapper id="locations" className="overflow-hidden">
@@ -59,44 +60,75 @@ export const LocationsSection = () => {
                 </p>
             </div>
 
-            {/* Horizontal Scroll Container */}
-            <div
-                ref={scrollRef}
-                className="flex overflow-x-hidden pb-8 gap-6 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 select-none mask-image-linear-gradient"
-                style={{ scrollBehavior: "auto" }}
-            >
-                {/* Render data 4 times for seamless looping */}
-                {[...SITE_DATA.locations, ...SITE_DATA.locations, ...SITE_DATA.locations, ...SITE_DATA.locations].map((location, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0.8 }}
-                        whileHover={{ scale: 1.02, opacity: 1 }}
-                        transition={{ duration: 0.3 }}
-                        className="w-[350px] md:w-[400px] bg-secondary/30 p-8 rounded-2xl border border-secondary hover:border-primary/20 transition-all duration-300 flex-shrink-0 whitespace-normal"
+            {/* Scroll Container with Arrows */}
+            <div className="relative group">
+                {/* Left Fade + Arrow */}
+                <div className="absolute inset-y-0 left-0 w-16 md:w-24 bg-gradient-to-r from-secondary to-transparent z-20 pointer-events-none" />
+                {canScrollLeft && (
+                    <button
+                        onClick={() => scroll("left")}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center text-accent hover:bg-primary hover:text-white transition-all duration-300 md:opacity-0 md:group-hover:opacity-100"
+                        aria-label="Scroll left"
                     >
-                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary mb-6 shadow-sm">
-                            <MapPin size={24} />
-                        </div>
-                        <h3 className="font-serif text-2xl text-accent font-bold mb-3">{location.name}</h3>
-                        <p className="text-base text-accent-gray leading-relaxed mb-3">
-                            {location.detail}
-                        </p>
-                        <div className="flex items-center text-sm font-semibold text-primary bg-primary/5 py-1 px-3 rounded-full w-fit">
-                            <span className="mr-1">🕒</span>
-                            {location.timing}
-                        </div>
-                    </motion.div>
-                ))}
-                <style jsx global>{`
-                    .scrollbar-hide::-webkit-scrollbar {
-                        display: none;
-                    }
-                    .scrollbar-hide {
-                        -ms-overflow-style: none;
-                        scrollbar-width: none;
-                    }
-                `}</style>
+                        <ChevronLeft size={20} />
+                    </button>
+                )}
+
+                {/* Right Fade + Arrow */}
+                <div className="absolute inset-y-0 right-0 w-16 md:w-24 bg-gradient-to-l from-secondary to-transparent z-20 pointer-events-none" />
+                {canScrollRight && (
+                    <button
+                        onClick={() => scroll("right")}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center text-accent hover:bg-primary hover:text-white transition-all duration-300 md:opacity-0 md:group-hover:opacity-100"
+                        aria-label="Scroll right"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                )}
+
+                <div
+                    ref={scrollRef}
+                    onMouseEnter={() => setIsPaused(true)}
+                    onMouseLeave={() => setIsPaused(false)}
+                    onTouchStart={() => setIsPaused(true)}
+                    onTouchEnd={() => setTimeout(() => setIsPaused(false), 3000)}
+                    className="flex overflow-x-auto pb-8 gap-6 select-none scrollbar-hide"
+                    style={{ scrollBehavior: "auto" }}
+                >
+                    {/* Render data 4 times for seamless looping */}
+                    {[...SITE_DATA.locations, ...SITE_DATA.locations, ...SITE_DATA.locations, ...SITE_DATA.locations].map((location, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0.8 }}
+                            whileHover={{ scale: 1.02, opacity: 1 }}
+                            transition={{ duration: 0.3 }}
+                            className="w-[350px] md:w-[400px] bg-secondary/30 p-8 rounded-2xl border border-secondary hover:border-primary/20 transition-all duration-300 flex-shrink-0 whitespace-normal"
+                        >
+                            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary mb-6 shadow-sm">
+                                <MapPin size={24} />
+                            </div>
+                            <h3 className="font-serif text-2xl text-accent font-bold mb-3">{location.name}</h3>
+                            <p className="text-base text-accent-gray leading-relaxed mb-3">
+                                {location.detail}
+                            </p>
+                            <div className="flex items-center text-sm font-semibold text-primary bg-primary/5 py-1 px-3 rounded-full w-fit">
+                                <span className="mr-1">🕒</span>
+                                {location.timing}
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
+
+            <style jsx global>{`
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+            `}</style>
         </SectionWrapper>
     );
 };

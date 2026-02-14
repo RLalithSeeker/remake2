@@ -39,7 +39,7 @@ export const Navbar = () => {
                 className={cn(
                     "fixed top-0 left-0 right-0 z-[120] transition-all duration-500",
                     scrolled || isOpen
-                        ? "bg-secondary/90 backdrop-blur-lg border-b border-primary/10 shadow-sm py-4"
+                        ? "bg-secondary/90 backdrop-blur-lg border-b border-primary/10 shadow-md py-4"
                         : "bg-transparent py-6"
                 )}
             >
@@ -99,9 +99,9 @@ export const Navbar = () => {
                         animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
                         exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
                         transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-[110] bg-secondary/95 flex flex-col justify-center items-center"
+                        className="fixed inset-0 z-[110] bg-secondary/95 flex flex-col items-center overflow-y-auto"
                     >
-                        <div className="flex flex-col items-center space-y-8 text-center p-4">
+                        <div className="flex flex-col items-center space-y-6 text-center p-4 pt-28 pb-12 my-auto">
                             {SITE_DATA.navigation.map((item, i) => (
                                 <motion.div
                                     key={item.label}

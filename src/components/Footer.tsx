@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { SITE_DATA } from "@/constants/data";
-import { SectionWrapper } from "./SectionWrapper";
+import { Facebook, Instagram } from "lucide-react";
 
 export const Footer = () => {
     return (
@@ -15,6 +15,27 @@ export const Footer = () => {
                         <p className="text-accent-gray text-sm leading-relaxed">
                             {SITE_DATA.hero.subheadline}
                         </p>
+                        {/* Social Media Links */}
+                        <div className="flex items-center gap-3 pt-2">
+                            <Link
+                                href={SITE_DATA.general.socialLinks.facebook}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-9 h-9 bg-accent/10 hover:bg-primary hover:text-white rounded-full flex items-center justify-center text-accent transition-all duration-300"
+                                aria-label="Facebook"
+                            >
+                                <Facebook size={18} />
+                            </Link>
+                            <Link
+                                href={SITE_DATA.general.socialLinks.instagram}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-9 h-9 bg-accent/10 hover:bg-primary hover:text-white rounded-full flex items-center justify-center text-accent transition-all duration-300"
+                                aria-label="Instagram"
+                            >
+                                <Instagram size={18} />
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Quick Links */}
@@ -42,8 +63,16 @@ export const Footer = () => {
                         </h4>
                         <div className="space-y-2 text-sm text-accent-gray">
                             <p>{SITE_DATA.general.address}</p>
-                            <p>{SITE_DATA.general.phone}</p>
-                            <p>{SITE_DATA.general.email}</p>
+                            <p>
+                                <Link href={`tel:${SITE_DATA.general.phone.replace(/\s/g, "")}`} className="hover:text-primary transition-colors">
+                                    {SITE_DATA.general.phone}
+                                </Link>
+                            </p>
+                            <p>
+                                <Link href={`mailto:${SITE_DATA.general.email}`} className="hover:text-primary transition-colors">
+                                    {SITE_DATA.general.email}
+                                </Link>
+                            </p>
                         </div>
                     </div>
                 </div>

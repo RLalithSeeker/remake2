@@ -110,12 +110,18 @@ export const HeroSection = () => {
                         animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
                         transition={{ delay: 0.4, duration: 1.2, ease: "easeOut" }}
                         className="relative w-full h-[40vh] lg:h-[650px] select-none pointer-events-none lg:-mt-10"
+                        style={{
+                            maskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 75%, transparent 100%), linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+                            maskComposite: "intersect",
+                            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 8%, black 75%, transparent 100%)",
+                            WebkitMaskComposite: "source-in",
+                        } as React.CSSProperties}
                     >
                         <Image
-                            src="/assets/doctor-cutout.png"
+                            src="/assets/doctor-cutout-2.png"
                             alt="Dr. Priyanka Karine"
                             fill
-                            className="object-contain object-center lg:object-right"
+                            className="object-contain object-center lg:object-right mix-blend-multiply"
                             sizes="(max-width: 768px) 100vw, 50vw"
                             priority
                             quality={100}
