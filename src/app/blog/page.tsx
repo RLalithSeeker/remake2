@@ -1,24 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, FileText, Calendar, BookOpen } from "lucide-react";
-import { SITE_DATA } from "@/constants/data";
 import { SectionWrapper } from "@/components/SectionWrapper";
 import Link from "next/link";
-import Image from "next/image";
+
+interface Blog {
+    id: number;
+    title: string;
+    excerpt: string;
+    date: string;
+    category: string;
+    image: string;
+    content: string;
+}
+
+interface ResearchPaper {
+    id: number;
+    title: string;
+    abstract: string;
+    year: string;
+    link: string;
+}
 
 export default function BlogPage() {
     const [searchQuery, setSearchQuery] = useState("");
+    const [blogs, setBlogs] = useState<Blog[]>([]);
+    const [research, setResearch] = useState<ResearchPaper[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        Promise.all([
+            fetch("/api/blogs").then(res => res.json()),
+            fetch("/api/research").then(res => res.json()),
+        ])
+            .then(([blogsData, researchData]) => {
+                setBlogs(blogsData);
+                setResearch(researchData);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
+    }, []);
 
     // Filter logic
-    const filteredBlogs = SITE_DATA.publication.blogs.filter(blog =>
+    const filteredBlogs = blogs.filter(blog =>
         blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
         blog.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const filteredResearch = SITE_DATA.publication.research.filter(paper =>
+    const filteredResearch = research.filter(paper =>
         paper.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         paper.abstract.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -71,11 +103,24 @@ export default function BlogPage() {
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="font-serif text-3xl text-accent font-bold">Latest Articles</h2>
                         <span className="text-sm font-medium text-primary bg-primary/10 px-3 py-1 rounded-full">
-                            {filteredBlogs.length} Article{filteredBlogs.length !== 1 ? 's' : ''}
+                            {loading ? "..." : `${filteredBlogs.length} Article${filteredBlogs.length !== 1 ? 's' : ''}`}
                         </span>
                     </div>
 
-                    {filteredBlogs.length > 0 ? (
+                    {loading ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+                                    <div className="h-48 bg-gray-100" />
+                                    <div className="p-6 space-y-4">
+                                        <div className="h-4 bg-gray-100 rounded w-1/3" />
+                                        <div className="h-6 bg-gray-100 rounded w-full" />
+                                        <div className="h-4 bg-gray-100 rounded w-2/3" />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : filteredBlogs.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {filteredBlogs.map((blog, index) => (
                                 <motion.article
@@ -87,18 +132,9 @@ export default function BlogPage() {
                                     className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group border border-gray-100"
                                 >
                                     <div className="relative h-48 bg-gray-100 overflow-hidden">
-                                        {/* Fallback for missing images in dev */}
                                         <div className="absolute inset-0 bg-secondary flex items-center justify-center text-accent/20">
                                             <BookOpen size={48} />
                                         </div>
-                                        {/* 
-                                        <Image 
-                                            src={blog.image} 
-                                            alt={blog.title} 
-                                            fill 
-                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                        /> 
-                                        */}
                                         <div className="absolute top-4 left-4">
                                             <span className="bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1 rounded-full text-accent uppercase tracking-wider">
                                                 {blog.category}

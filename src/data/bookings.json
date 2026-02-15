@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1771182545050,
+    "timestamp": 1771182545050,
+    "date": "16/2/2026",
+    "name": "Ravula",
+    "email": "eample1234@gmail.com",
+    "phone": "9000716381",
+    "patientType": "returning",
+    "appointmentType": "Follow-up Appointment",
+    "preferredDay": "2026-02-18",
+    "preferredTime": "Afternoon (12pm - 3pm)",
+    "reason": "is this  working\n",
+    "status": "completed"
+  }
+]

@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "title": "Advanced Sonography in Fetal Cardiac Assessment",
+        "abstract": "A clinical study on the efficacy of 3D ultrasound techniques in early detection of congenital heart defects.",
+        "year": "2024",
+        "link": "#"
+    },
+    {
+        "id": 2,
+        "title": "Outcomes of Laparoscopic Management for Endometriosis",
+        "abstract": "Analyzing long-term patient recovery and fertility rates post-laparoscopic intervention for stage IV endometriosis.",
+        "year": "2023",
+        "link": "#"
+    },
+    {
+        "id": 3,
+        "title": "Pre-eclampsia Prediction Models in First Trimester",
+        "abstract": "Evaluating the predictive accuracy of combined biochemical markers and uterine artery doppler indices.",
+        "year": "2025",
+        "link": "#"
+    },
+    {
+        "id": 4,
+        "title": "Hormonal Therapies in Menopause Management",
+        "abstract": "A comparative review of bioidentical versus synthetic hormone replacement therapies.",
+        "year": "2024",
+        "link": "#"
+    }
+]
