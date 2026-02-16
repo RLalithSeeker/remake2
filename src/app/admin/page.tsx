@@ -289,102 +289,7 @@ export default function AdminPage() {
 
     // ... (rest of code)
 
-    {/* Stats & Actions */ }
-    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-        {/* ... stats ... */}
-    </div>
 
-    {/* Status Filter Tabs */ }
-    <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-        {/* Keep 'All' as default or manage functionality if needed, for now just showing all sorted by date */}
-    </div>
-
-    {/* Booking List */ }
-    {
-        bookingLoading ? (
-            <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
-        ) : bookings.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-2xl border border-gray-100">
-                <Calendar className="w-12 h-12 text-accent-gray/30 mx-auto mb-4" />
-                <p className="text-accent-gray/60">No appointment requests yet.</p>
-            </div>
-        ) : (
-            <div className="grid grid-cols-1 gap-4">
-                {bookings.map((booking, index) => (
-                    <motion.div key={booking.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
-                        className={`bg-white rounded-2xl p-6 border transition-all ${booking.status === 'completed' ? 'border-green-100 bg-green-50/30' : 'border-gray-100 hover:border-primary/20 hover:shadow-md'}`}>
-                        <div className="flex flex-col lg:flex-row justify-between gap-6">
-                            {/* Left: Patient Info */}
-                            <div className="flex-1 space-y-2">
-                                <div className="flex items-center gap-3">
-                                    <h3 className="text-xl font-bold text-accent">{booking.name}</h3>
-                                    <div className="flex gap-2">
-                                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${booking.patientType === "new" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>
-                                            {booking.patientType === "new" ? "New" : "Return"}
-                                        </span>
-                                        <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${booking.status === 'completed' ? 'bg-green-100 text-green-700' :
-                                            booking.status === 'contacted' ? 'bg-yellow-100 text-yellow-700' :
-                                                'bg-primary/10 text-primary'
-                                            }`}>
-                                            {booking.status === 'manual' ? 'Manual' : (booking.status || 'New')}
-                                        </span>
-                                    </div>
-                                    <span className="text-xs text-accent-gray/40">{new Date(booking.timestamp).toLocaleDateString()}</span>
-                                </div>
-                                {/* ... details ... */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-sm text-accent-gray">
-                                    <p className="flex items-center gap-2"><span className="font-semibold text-accent w-16">Email:</span> {booking.email}</p>
-                                    <p className="flex items-center gap-2"><span className="font-semibold text-accent w-16">Phone:</span> {booking.phone}</p>
-                                    <p className="flex items-center gap-2"><span className="font-semibold text-accent w-16">Type:</span> {booking.appointmentType || "Not specified"}</p>
-                                    <p className="flex items-center gap-2"><span className="font-semibold text-accent w-16">Time:</span> {booking.preferredDay} - {booking.preferredTime}</p>
-                                </div>
-                                {booking.reason && (
-                                    <div className="mt-4 bg-secondary/30 p-3 rounded-xl">
-                                        <p className="text-xs font-bold text-accent uppercase mb-1">Reason for Visit</p>
-                                        <p className="text-sm text-accent-gray italic">&quot;{booking.reason}&quot;</p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Right: Actions */}
-                            <div className="flex flex-col gap-3 border-t lg:border-t-0 lg:border-l border-gray-100 pt-4 lg:pt-0 lg:pl-6 shrink-0 min-w-[140px]">
-                                {/* Status Actions */}
-                                <div className="flex flex-col gap-2">
-                                    {booking.status !== 'contacted' && booking.status !== 'completed' && (
-                                        <button onClick={() => handleBookingStatus(booking.id, 'contacted')}
-                                            className="text-xs bg-yellow-100 text-yellow-800 px-3 py-2 rounded-lg font-bold hover:bg-yellow-200 transition-colors w-full">
-                                            Mark Contacted
-                                        </button>
-                                    )}
-                                    {booking.status !== 'completed' && (
-                                        <button onClick={() => handleBookingStatus(booking.id, 'completed')}
-                                            className="text-xs bg-green-100 text-green-800 px-3 py-2 rounded-lg font-bold hover:bg-green-200 transition-colors w-full">
-                                            Mark Complete
-                                        </button>
-                                    )}
-                                </div>
-
-                                {deleteBookingConfirm === booking.id ? (
-                                    <div className="flex flex-col gap-2 w-full">
-                                        <span className="text-xs text-red-500 font-medium text-center">Confirm?</span>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => handleBookingDelete(booking.id)} className="text-xs bg-red-500 text-white px-2 py-2 rounded-lg font-medium hover:bg-red-600 transition-colors flex-1">Yes</button>
-                                            <button onClick={() => setDeleteBookingConfirm(null)} className="text-xs bg-gray-100 text-accent-gray px-2 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors flex-1">No</button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <button onClick={() => setDeleteBookingConfirm(booking.id)}
-                                        className="flex items-center justify-center gap-2 text-xs text-red-500 hover:bg-red-50 px-3 py-2 rounded-lg transition-all w-full mt-auto">
-                                        <Trash2 className="w-3 h-3" /> Delete
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
-        )
-    }
 
     /* ─── IMAGE UPLOAD ─── */
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -503,7 +408,7 @@ export default function AdminPage() {
                     <Link href="/" className="inline-flex items-center text-accent-gray/60 hover:text-accent mb-8 text-sm transition-colors">
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to website
                     </Link>
-                    <div className="bg-white rounded-3xl shadow-xl p-10 border border-gray-100">
+                    <div className="bg-white rounded-3xl shadow-xl p-6 md:p-10 border border-gray-100">
                         <div className="text-center mb-8">
                             <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                 <Shield className="w-8 h-8 text-primary" />
@@ -563,7 +468,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Tab Switcher */}
-                <div className="flex gap-2 mb-8 bg-white rounded-2xl p-1.5 border border-gray-100 w-fit">
+                <div className="flex gap-2 mb-8 bg-white rounded-2xl p-1.5 border border-gray-100 w-full md:w-fit overflow-x-auto scrollbar-hide">
                     {role === "admin" && (
                         <>
                             <button onClick={() => setActiveTab("blogs")}
@@ -589,7 +494,7 @@ export default function AdminPage() {
                 {activeTab === "blogs" && (
                     <>
                         {/* Stats */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                             <div className="bg-white rounded-2xl p-5 border border-gray-100">
                                 <p className="text-3xl font-bold text-accent">{blogs.length}</p>
                                 <p className="text-xs text-accent-gray/60 uppercase tracking-wider mt-1">Total Posts</p>
@@ -668,7 +573,7 @@ export default function AdminPage() {
                 {activeTab === "research" && (
                     <>
                         {/* Stats */}
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                             <div className="bg-white rounded-2xl p-5 border border-gray-100">
                                 <p className="text-3xl font-bold text-accent">{research.length}</p>
                                 <p className="text-xs text-accent-gray/60 uppercase tracking-wider mt-1">Total Papers</p>
@@ -829,7 +734,7 @@ export default function AdminPage() {
                                                             </div>
                                                         </div>
                                                     ) : (
-                                                        <div className="flex gap-2 lg:flex-col items-end w-full">
+                                                        <div className="flex flex-wrap gap-2 lg:flex-col items-end w-full justify-end">
                                                             {booking.status !== "completed" ? (
                                                                 <button onClick={() => handleBookingStatusUpdate(booking.id, "completed")}
                                                                     className="flex items-center gap-2 text-sm font-semibold text-green-600 hover:bg-green-50 px-3 py-2 rounded-lg transition-colors w-full justify-end">
@@ -877,12 +782,12 @@ export default function AdminPage() {
                             <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
                                 className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl z-10 overflow-hidden">
 
-                                <div className="bg-accent px-8 py-6 flex items-center justify-between">
+                                <div className="bg-accent px-6 py-4 md:px-8 md:py-6 flex items-center justify-between">
                                     <h2 className="font-serif text-xl font-bold text-white">{editingBooking ? "Edit Booking" : "Add Booking"}</h2>
                                     <button onClick={() => { setShowManualBooking(false); setEditingBooking(null); }} className="text-white/60 hover:text-white"><X className="w-5 h-5" /></button>
                                 </div>
 
-                                <form onSubmit={handleManualBookingSubmit} className="p-8 space-y-4 max-h-[80vh] overflow-y-auto">
+                                <form onSubmit={handleManualBookingSubmit} className="p-6 md:p-8 space-y-4 max-h-[80vh] overflow-y-auto">
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="col-span-2">
                                             <label className="block text-sm font-medium text-accent mb-1">Patient Name</label>
@@ -956,13 +861,13 @@ export default function AdminPage() {
                                 className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl z-10">
 
                                 {/* Header */}
-                                <div className="sticky top-0 bg-white rounded-t-3xl border-b border-gray-100 px-8 py-5 flex items-center justify-between z-20">
+                                <div className="sticky top-0 bg-white rounded-t-3xl border-b border-gray-100 px-6 py-4 md:px-8 md:py-5 flex items-center justify-between z-20">
                                     <h2 className="font-serif text-2xl font-bold text-accent">{editingBlog ? "Edit Blog Post" : "Create New Blog Post"}</h2>
                                     <button onClick={() => { setShowBlogForm(false); setEditingBlog(null); setImagePreview(""); }}
                                         className="p-2 rounded-xl hover:bg-gray-100 text-accent-gray/60 transition-colors"><X className="w-5 h-5" /></button>
                                 </div>
 
-                                <form onSubmit={handleBlogSubmit} className="p-8 space-y-6">
+                                <form onSubmit={handleBlogSubmit} className="p-6 md:p-8 space-y-6">
                                     {/* Title */}
                                     <div>
                                         <label className="flex items-center gap-2 text-sm font-semibold text-accent mb-2"><FileText className="w-4 h-4 text-primary" /> Blog Title</label>
@@ -1093,13 +998,13 @@ export default function AdminPage() {
                             <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
                                 className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl z-10">
 
-                                <div className="sticky top-0 bg-white rounded-t-3xl border-b border-gray-100 px-8 py-5 flex items-center justify-between z-20">
+                                <div className="sticky top-0 bg-white rounded-t-3xl border-b border-gray-100 px-6 py-4 md:px-8 md:py-5 flex items-center justify-between z-20">
                                     <h2 className="font-serif text-2xl font-bold text-accent">{editingResearch ? "Edit Research Paper" : "Add Research Paper"}</h2>
                                     <button onClick={() => { setShowResearchForm(false); setEditingResearch(null); }}
                                         className="p-2 rounded-xl hover:bg-gray-100 text-accent-gray/60 transition-colors"><X className="w-5 h-5" /></button>
                                 </div>
 
-                                <form onSubmit={handleResearchSubmit} className="p-8 space-y-6">
+                                <form onSubmit={handleResearchSubmit} className="p-6 md:p-8 space-y-6">
                                     {/* Title */}
                                     <div>
                                         <label className="flex items-center gap-2 text-sm font-semibold text-accent mb-2"><FileText className="w-4 h-4 text-primary" /> Paper Title</label>
